@@ -1,0 +1,540 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>MedBuddy</title>
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+      integrity="sha384-4bw+/aepP/YC94hEpVNVgiZdgIC5+VKNBQNGCHeKRQN+PtmoHDEXuppvnDJzQIu9"
+      crossorigin="anonymous"
+    />
+    <link rel="stylesheet" href="../static/css/index.css">
+    </head>
+  <body>
+    <nav class="navbar navbar-expand-lg">
+      <div class="container-fluid">
+        <div class="navleft">
+          <a class="navbar-brand" href="#">MedBuddy</a>
+          
+        </div>
+        
+        <div class="navright">
+          <button
+            class="navbar-toggler"
+            type="button"
+            data-bs-toggle="collapse"
+            data-bs-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent"
+            aria-expanded="false"
+            aria-label="Toggle navigation"
+          >
+            <span class="navbar-toggler-icon"></span>
+          </button>
+          <div class="collapse navbar-collapse" id="navbarSupportedContent">
+            <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+              <li class="nav-item">
+                <a class="nav-link active" aria-current="page" href="#">Home</a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link" href="/about">About</a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link" href="/contact">Contact</a>
+              </li>
+            </ul>
+          </div>
+        </div>
+        
+      </div>
+    </nav>
+    <div class="both">
+      <div class="left">
+        <h1 
+          class="mt-4 my-4 text-green"
+          style="
+          color: black;
+          border-radius: 15px;
+          padding: 40px;
+          font-size: 90px;
+        ">
+          Your Go-To <br>
+           Doctor.
+          </h1>
+      </div>
+       <div class="right" >
+        <form action="/predict" method="post">
+          <div class="form-group rights">
+            <label for="symptoms">Enter Symptoms</label>
+            <input
+              type="text"
+              class="form-control"
+              id="symptoms"
+              name="symptoms"
+              placeholder="Itching, Runny Nose..."
+              oninput="showSuggestions(this.value)"
+            />
+            <ul
+              id="suggestions"></ul>
+          </div>
+  
+         
+          <button
+            type="button"
+            class="viewbtn btn"
+            data-bs-toggle="modal"
+            data-bs-target="#symptomsModal"
+          >
+            View All Symptoms
+          </button>
+  
+          <br />
+          {% if message %}
+<div
+  class="modal fade"
+  id="messageModal"
+  tabindex="-1"
+  aria-labelledby="messageModalLabel"
+  aria-hidden="true"
+>
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="messageModalLabel">Error</h5>
+        <button
+          type="button"
+          class="btn-close"
+          data-bs-dismiss="modal"
+          aria-label="Close"
+        ></button>
+      </div>
+      <div class="modal-body">
+        {{ message }}
+      </div>
+    </div>
+  </div>
+</div>
+<script>
+  document.addEventListener('DOMContentLoaded', function () {
+    var messageModal = new bootstrap.Modal(document.getElementById('messageModal'));
+    messageModal.show();
+  });
+</script>
+{% endif %}
+
+   
+          <br />
+          <button
+            type="submit"
+            class="btn pdbtn"
+          >
+            Predict
+          </button>
+        </form>
+      </div>
+  
+    </div>
+   
+    {% if predicted_disease %}
+
+    <h1 class="text-center my-4 mt-4">MedBuddy says</h1>
+      <div class="result-container container">
+        <button
+          class="toggle-button"
+          data-bs-toggle="modal"
+          data-bs-target="#diseaseModal"
+        >
+          Disease
+        </button>
+        <button
+          class="toggle-button"
+          data-bs-toggle="modal"
+          data-bs-target="#descriptionModal"
+        >
+          Description
+        </button>
+        <button
+          class="toggle-button"
+          data-bs-toggle="modal"
+          data-bs-target="#precautionModal">
+          Precaution
+        </button>
+        <button
+          class="toggle-button"
+          data-bs-toggle="modal"
+          data-bs-target="#medicationsModal">
+          Medications
+        </button>
+        <button
+          class="toggle-button"
+          data-bs-toggle="modal"
+          data-bs-target="#workoutsModal"  "
+        >
+          Workouts </button>
+        <button
+          class="toggle-button"
+          data-bs-toggle="modal"
+          data-bs-target="#dietsModal"
+        >
+          Diets
+        </button>
+    </div>
+
+    {% endif %}
+
+    <div
+      class="modal fade"
+      id="diseaseModal"
+      tabindex="-1"
+      aria-labelledby="diseaseModalLabel"
+      aria-hidden="true"
+    >
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div
+            class="modal-header"
+          >
+            <h5 class="modal-title" id="diseaseModalLabel">
+              Predicted Disease
+            </h5>
+            <button
+              type="button"
+              class="btn-close"
+              data-bs-dismiss="modal"
+              aria-label="Close"
+            ></button>
+          </div>
+          <div class="modal-body">
+            <p>{{ predicted_disease }}</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div
+      class="modal fade"
+      id="descriptionModal"
+      tabindex="-1"
+      aria-labelledby="descriptionModalLabel"
+      aria-hidden="true"
+    >
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div
+            class="modal-header"
+          >
+            <h5 class="modal-title" id="descriptionModalLabel">Description</h5>
+            <button
+              type="button"
+              class="btn-close"
+              data-bs-dismiss="modal"
+              aria-label="Close"
+            ></button>
+          </div>
+          <div class="modal-body">
+            <p>{{ dis_des }}</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div
+      class="modal fade"
+      id="precautionModal"
+      tabindex="-1"
+      aria-labelledby="precautionModalLabel"
+      aria-hidden="true"
+    >
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div
+            class="modal-header"
+          >
+            <h5 class="modal-title" id="precautionModalLabel">Precautions</h5>
+            <button
+              type="button"
+              class="btn-close"
+              data-bs-dismiss="modal"
+              aria-label="Close"
+            ></button>
+          </div>
+          <div class="modal-body">
+            <ul>
+              {% for i in my_precautions %}
+              <li>{{ i }}</li>
+              {% endfor %}
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div
+      class="modal fade"
+      id="medicationsModal"
+      tabindex="-1"
+      aria-labelledby="medicationsModalLabel"
+      aria-hidden="true"
+    >
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div
+            class="modal-header"
+          >
+            <h5 class="modal-title" id="medicationsModalLabel">Recommended Medications</h5>
+            <button
+              type="button"
+              class="btn-close"
+              data-bs-dismiss="modal"
+              aria-label="Close"
+            ></button>
+          </div>
+          <div class="modal-body">
+            <ul>
+              {% for i in medications %}
+              <li>{{ i }}</li>
+              {% endfor %}
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div
+      class="modal fade"
+      id="workoutsModal"
+      tabindex="-1"
+      aria-labelledby="workoutsModalLabel"
+      aria-hidden="true"
+    >
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div
+            class="modal-header"
+          >
+            <h5 class="modal-title" id="workoutsModalLabel">Recommended Workouts</h5>
+            <button
+              type="button"
+              class="btn-close"
+              data-bs-dismiss="modal"
+              aria-label="Close"
+            ></button>
+          </div>
+          <div class="modal-body">
+            <ul>
+              {% for i in workout %}
+              <li>{{ i }}</li>
+              {% endfor %}
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div
+      class="modal fade"
+      id="dietsModal"
+      tabindex="-1"
+      aria-labelledby="dietsModalLabel"
+      aria-hidden="true"
+    >
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div
+            class="modal-header"
+          >
+            <h5 class="modal-title" id="dietsModalLabel">Diet Suggestions</h5>
+            <button
+              type="button"
+              class="btn-close"
+              data-bs-dismiss="modal"
+              aria-label="Close"
+            ></button>
+          </div>
+          <div class="modal-body">
+            <ul>
+              {% for i in my_diet %}
+              <li>{{ i }}</li>
+              {% endfor %}
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div
+      class="modal fade"
+      id="symptomsModal"
+      tabindex="-1"
+      aria-labelledby="symptomsModalLabel"
+      aria-hidden="true"
+    >
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title" id="symptomsModalLabel">Select Symptoms</h5>
+            <button
+              type="button"
+              class="btn-close"
+              data-bs-dismiss="modal"
+              aria-label="Close"
+            ></button>
+          </div>
+          <div class="modal-body">
+            <ul style="list-style: none; padding: 0">
+              <script>
+                   const symptomDataset = [
+    { code: "itching", description: "Itching" },
+    { code: "skin_rash", description: "Skin Rash" },
+    { code: "nodal_skin_eruptions", description: "Nodal Skin Eruptions" },
+    { code: "continuous_sneezing", description: "Continuous Sneezing" },
+    { code: "shivering", description: "Shivering" },
+    { code: "chills", description: "Chills" },
+    { code: "joint_pain", description: "Joint Pain" },
+    { code: "stomach_pain", description: "Stomach Pain" },
+    { code: "acidity", description: "Acidity" },
+    { code: "ulcers_on_tongue", description: "Ulcers on Tongue" },
+    { code: "muscle_wasting", description: "Muscle Wasting" },
+    { code: "vomiting", description: "Vomiting" },
+    { code: "burning_micturition", description: "Burning Micturition" },
+    { code: "spotting_urination", description: "Spotting Urination" },
+    { code: "fatigue", description: "Fatigue" },
+    { code: "weight_gain", description: "Weight Gain" },
+    { code: "anxiety", description: "Anxiety" },
+    { code: "cold_hands_and_feets", description: "Cold Hands and Feet" },
+    { code: "mood_swings", description: "Mood Swings" },
+    { code: "weight_loss", description: "Weight Loss" },
+    { code: "restlessness", description: "Restlessness" },
+    { code: "lethargy", description: "Lethargy" },
+    { code: "patches_in_throat", description: "Patches in Throat" },
+    { code: "irregular_sugar_level", description: "Irregular Sugar Level" },
+    { code: "cough", description: "Cough" },
+    { code: "high_fever", description: "High Fever" },
+    { code: "sunken_eyes", description: "Sunken Eyes" },
+    { code: "breathlessness", description: "Breathlessness" },
+    { code: "sweating", description: "Sweating" },
+    { code: "dehydration", description: "Dehydration" },
+    { code: "indigestion", description: "Indigestion" },
+    { code: "headache", description: "Headache" },
+    { code: "yellowish_skin", description: "Yellowish Skin" },
+    { code: "dark_urine", description: "Dark Urine" },
+    { code: "nausea", description: "Nausea" },
+    { code: "loss_of_appetite", description: "Loss of Appetite" },
+    { code: "pain_behind_the_eyes", description: "Pain Behind the Eyes" },
+    { code: "back_pain", description: "Back Pain" },
+    { code: "constipation", description: "Constipation" },
+    { code: "abdominal_pain", description: "Abdominal Pain" },
+    { code: "diarrhoea", description: "Diarrhoea" },
+    { code: "mild_fever", description: "Mild Fever" },
+    { code: "yellow_urine", description: "Yellow Urine" },
+    { code: "yellowing_of_eyes", description: "Yellowing of Eyes" },
+    { code: "acute_liver_failure", description: "Acute Liver Failure" },
+    { code: "fluid_overload", description: "Fluid Overload" },
+    { code: "swelling_of_stomach", description: "Swelling of Stomach" },
+    { code: "swelled_lymph_nodes", description: "Swelled Lymph Nodes" },
+    { code: "malaise", description: "Malaise" },
+    { code: "blurred_and_distorted_vision", description: "Blurred and Distorted Vision" },
+    { code: "phlegm", description: "Phlegm" },
+    { code: "throat_irritation", description: "Throat Irritation" },
+    { code: "redness_of_eyes", description: "Redness of Eyes" },
+    { code: "sinus_pressure", description: "Sinus Pressure" },
+    { code: "runny_nose", description: "Runny Nose" },
+    { code: "congestion", description: "Congestion" },
+    { code: "chest_pain", description: "Chest Pain" },
+    { code: "weakness_in_limbs", description: "Weakness in Limbs" },
+    { code: "fast_heart_rate", description: "Fast Heart Rate" },
+    { code: "pain_during_bowel_movements", description: "Pain During Bowel Movements" },
+    { code: "pain_in_anal_region", description: "Pain in Anal Region" },
+    { code: "bloody_stool", description: "Bloody Stool" },
+    { code: "irritation_in_anus", description: "Irritation in Anus" },
+    { code: "neck_pain", description: "Neck Pain" },
+    { code: "dizziness", description: "Dizziness" },
+    { code: "cramps", description: "Cramps" },
+    { code: "bruising", description: "Bruising" },
+    { code: "obesity", description: "Obesity" },
+    { code: "swollen_legs", description: "Swollen Legs" },
+    { code: "swollen_blood_vessels", description: "Swollen Blood Vessels" },
+    { code: "puffy_face_and_eyes", description: "Puffy Face and Eyes" },
+    { code: "enlarged_thyroid", description: "Enlarged Thyroid" },
+    { code: "brittle_nails", description: "Brittle Nails" },
+    { code: "swollen_extremeties", description: "Swollen Extremities" },
+    { code: "excessive_hunger", description: "Excessive Hunger" },
+    { code: "extra_marital_contacts", description: "Extra-Marital Contacts" },
+    { code: "drying_and_tingling_lips", description: "Drying and Tingling Lips" },
+    { code: "slurred_speech", description: "Slurred Speech" },
+    { code: "knee_pain", description: "Knee Pain" },
+    { code: "hip_joint_pain", description: "Hip Joint Pain" },
+    { code: "muscle_weakness", description: "Muscle Weakness" },
+    { code: "stiff_neck", description: "Stiff Neck" },
+    { code: "swelling_joints", description: "Swelling Joints" },
+    { code: "movement_stiffness", description: "Movement Stiffness" },
+    { code: "spinning_movements", description: "Spinning Movements" },
+    { code: "loss_of_balance", description: "Loss of Balance" },
+    { code: "unsteadiness", description: "Unsteadiness" },
+    { code: "weakness_of_one_body_side", description: "Weakness of One Body Side" },
+    { code: "loss_of_smell", description: "Loss of Smell" },
+    { code: "bladder_discomfort", description: "Bladder Discomfort" },
+    { code: "foul_smell_of_urine", description: "Foul Smell of Urine" },
+    { code: "continuous_feel_of_urine", description: "Continuous Feel of Urine" },
+    { code: "passage_of_gases", description: "Passage of Gases" },
+    { code: "internal_itching", description: "Internal Itching" },
+    { code: "toxic_look_(typhos)", description: "Toxic Look (Typhos)" },
+    { code: "depression", description: "Depression" },
+    { code: "irritability", description: "Irritability" },
+    { code: "muscle_pain", description: "Muscle Pain" },
+    { code: "altered_sensorium", description: "Altered Sensorium" },
+    { code: "red_spots_over_body", description: "Red Spots Over Body" },
+    { code: "belly_pain", description: "Belly Pain" },
+    { code: "abnormal_menstruation", description: "Abnormal Menstruation" },
+    { code: "dischromic_patches", description: "Dischromic Patches" },
+    { code: "watering_from_eyes", description: "Watering from Eyes" },
+    { code: "increased_appetite", description: "Increased Appetite" },
+    { code: "polyuria", description: "Polyuria" },
+    { code: "family_history", description: "Family History" },
+    { code: "mucoid_sputum", description: "Mucoid Sputum" },
+    { code: "rusty_sputum", description: "Rusty Sputum" },
+    { code: "lack_of_concentration", description: "Lack of Concentration" },
+    { code: "visual_disturbances", description: "Visual Disturbances" },
+    { code: "receiving_blood_transfusion", description: "Receiving Blood Transfusion" },
+    { code: "receiving_unsterile_injections", description: "Receiving Unsterile Injections" },
+    { code: "coma", description: "Coma" },
+    { code: "stomach_bleeding", description: "Stomach Bleeding" },
+    { code: "distention_of_abdomen", description: "Distention of Abdomen" },
+    { code: "history_of_alcohol_consumption", description: "History of Alcohol Consumption" },
+    { code: "fluid_overload.1", description: "Fluid Overload (Repeated)" },
+    { code: "blood_in_sputum", description: "Blood in Sputum" },
+    { code: "prominent_veins_on_calf", description: "Prominent Veins on Calf" },
+    { code: "palpitations", description: "Palpitations" },
+    { code: "painful_walking", description: "Painful Walking" },
+    { code: "pus_filled_pimples", description: "Pus-Filled Pimples" },
+    { code: "blackheads", description: "Blackheads" },
+    { code: "scurring", description: "Scarring" },
+    { code: "skin_peeling", description: "Skin Peeling" },
+    { code: "silver_like_dusting", description: "Silver-Like Dusting" },
+    { code: "small_dents_in_nails", description: "Small Dents in Nails" },
+    { code: "inflammatory_nails", description: "Inflammatory Nails" },
+    { code: "blister", description: "Blister" },
+    { code: "red_sore_around_nose", description: "Red Sore Around Nose" },
+    { code: "yellow_crust_ooze", description: "Yellow Crust Ooze" },
+];
+                    symptomDataset.sort((a,b)=>a.description.localeCompare(b.description));
+                    symptomDataset.forEach((symptom) => {
+                  document.write(`
+                                    <li class="hoverable-item" onclick="addSymptom('${symptom.code}')">${symptom.description}</li>
+                                `);
+                });
+              </script>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
+    <script src="{{ url_for('static', filename='js/index.js') }}"></script>
+    <script
+      src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/js/bootstrap.bundle.min.js"
+      integrity="sha384-HwwvtgBNo3bZJJLYd8oVXjrBZt8cqVSpeBNS5n7C8IVInixGAoxmnlMuBnhbgrkm"
+      crossorigin="anonymous"
+    ></script>
+  </body>
+</html>
