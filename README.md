@@ -2,6 +2,9 @@
 
 MedBuddy is an intelligent web application designed to serve as your personal healthcare assistant. By analyzing user-provided symptoms, it predicts potential diseases and offers tailored recommendations, including precautions, medications, and diet plans. Whether you're looking for quick guidance or a detailed plan, MedBuddy provides a seamless and interactive experience powered by cutting-edge technology. The project showcase the integration of machine learning with web development to enhance healthcare accessibility.      
 
+## Preview
+![Screenshot of Web Page](C:\Users\Admin\Pictures\Screenshots\medpic.png)
+
 ## Features    
 
 - **Disease Prediction:** Predicts potential diseases based on the symptoms entered by the user.
